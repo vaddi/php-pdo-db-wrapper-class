@@ -1,0 +1,5 @@
+# gitignore stuff
+# osx hidden folder
+**/.DS_Store
+# config file
+config.php
