@@ -61,6 +61,28 @@ print_r( "Connected: " . boolify( $Database->connected ) . "<br />" );
 print_r( 'Connection: ' . $Database->connection() . "<br />" );
 echo "</pre>";
 
+// check presence of config.php
+if( ! is_file( "config.php" ) ) {
+	echo "No config.php available. <br />Please edit config.php.example and save as config.php. <br />";
+	echo SQLITE_FILE;
+	exit;
+}
+
+// check SQLite Database file
+if( $type === 'SQLite' && ! is_writeable( SQLITE_FILE ) ) {
+	echo "SQLite file not writeable by webserver user, please add write permissions to file and Folder! <br />";
+	echo "sudo chown _www " . SQLITE_FILE . "<br />";
+	echo "sudo chown _www " . dirname( SQLITE_FILE )  . "<br />";
+	exit;
+}
+
+// check Database connection
+if( ! $Database->connection() ) {
+	echo "No Database connection available, abort script. <br />";
+	exit;
+}
+
+
 // Drop
 echo "<pre>";
 echo "Drop: ";

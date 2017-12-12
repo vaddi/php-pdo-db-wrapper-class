@@ -75,6 +75,7 @@ class Database implements iDatabase {
 	public function query( $query ) {
 		try {
 			$this->_stmt = $this->_db->prepare( $query );
+			// TODO remove this, only used in function lastInsertId
 			$this->_query = (string) $query;
 		} catch( PDOException $e ) {
 			throw new Exception( __CLASS__ . '::' . __FUNCTION__ . ' throw ' . $e->getMessage() );
@@ -167,6 +168,7 @@ class Database implements iDatabase {
 		$result = null;
 		try {
 			if( $this->_stmt !== null ) {
+				// TODO use queryString instead of $this->_query
 				if( strpos( 'INSERT INTO', $this->_query ) === false ) {
 					$result = (int) $this->_db->lastInsertId( $table );
 				}
