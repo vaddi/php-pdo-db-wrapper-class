@@ -90,19 +90,6 @@ class Database_SQLite extends PDO implements iDatabase {
 	public function bind( $param, $value, $type = null ) {
     try {
     	if( is_null( $type ) ) {
-/*		    switch( true ) {
-		      case is_int( $value ):
-		        $type = PDO::PARAM_INT;
-		        break;
-		      case is_bool( $value ):
-		        $type = PDO::PARAM_BOOL;
-		        break;
-		      case is_null( $value ):
-		        $type = PDO::PARAM_NULL;
-		        break;
-		      default:
-		        $type = PDO::PARAM_STR;
-		    } */
 		    switch( true ) {
 		      case is_int( $value ):
 		        $type = PDO::SQLITE3_INTEGER;
@@ -197,15 +184,15 @@ class Database_SQLite extends PDO implements iDatabase {
 	
 	// Transactions
 	public function beginTransaction() {
-		return $this->_db->beginTransaction();
+		return parent::beginTransaction();
 	}
 	
 	public function endTransaction() {
-		return $this->_db->commit();
+		return parent::commit();
 	}
 	
 	public function cancelTransaction() {
-		return $this->_db->rollBack();
+		return parent::rollBack();
 	}
 	
 	// Debuging
@@ -225,7 +212,8 @@ class Database_SQLite extends PDO implements iDatabase {
     $result = null;
 		try {
 			if( $this->_stmt !== null ) {
-				$result = $this->_stmt->queryString();
+				$result = $this->_stmt->queryString;
+				//$result = parent::queryString();
 			}
 		} catch( PDOException $e ) {
 			throw new Exception( __CLASS__ . '::' . __FUNCTION__ . ' throw ' . $e->getMessage() );

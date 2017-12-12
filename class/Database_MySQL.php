@@ -169,15 +169,15 @@ class Database_MySQL extends PDO implements iDatabase {
 	
 	// Transactions
 	public function beginTransaction() {
-		return $this->_db->beginTransaction();
+		return parent::beginTransaction();
 	}
 	
 	public function endTransaction() {
-		return $this->_db->commit();
+		return parent::commit();
 	}
 	
 	public function cancelTransaction() {
-		return $this->_db->rollBack();
+		return parent::rollBack();
 	}
 	
 	// Debuging
@@ -197,7 +197,7 @@ class Database_MySQL extends PDO implements iDatabase {
     $result = null;
 		try {
 			if( $this->_stmt !== null ) {
-				$result = $this->_stmt->queryString();
+				$result = $this->_stmt->queryString;
 			}
 		} catch( PDOException $e ) {
 			throw new Exception( __CLASS__ . '::' . __FUNCTION__ . ' throw ' . $e->getMessage() );
