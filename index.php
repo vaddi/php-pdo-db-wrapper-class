@@ -1,7 +1,10 @@
 <?php
-
 /*
-	Simple Wrapper Class to connect a sqlite3 or mysql Database whith the same functions
+	Simple Wrapper Class to connect to a Database whith the same function calls
+
+	current supported Databases:
+	MySQL
+	SQLite
 */
 
 // setup Database
@@ -194,7 +197,7 @@ print_r( '<br />--- <br />Query Result: <br />' );
 echo tablify( $Database->resultObj() );
 //print_r( $Database->resultset() );
 print_r( 'RowCount: ' . $Database->rowCount( $table ) . "<br />" );
-echo "</pre>"; 
+echo "</pre>";
 
 // Update
 echo "<pre>";
