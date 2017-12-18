@@ -1,10 +1,10 @@
 <?php
-
 /*
-	Simple Wrapper Class to connect a sqlite3 or mysql Database whith the same functions
-
-TODO:
-- LastInsterId not working on sqlite
+	Simple Wrapper Class to connect to a Database whith the same function calls
+  
+	current supported Databases:
+	MySQL
+	SQLite
 */
 
 require_once( __DIR__ . '/class/Database.php' );
