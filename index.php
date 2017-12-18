@@ -2,17 +2,31 @@
 
 /*
 	Simple Wrapper Class to connect a sqlite3 or mysql Database whith the same functions
-
-TODO:
-- LastInsterId not working on sqlite
 */
-
-require_once( __DIR__ . '/class/Database.php' );
 
 // setup Database
 //$type = 'MySQL';
 $type = 'SQLite';
 $table = 'users';
+
+// check for missing libraries
+if( ! is_file( __DIR__ . '/config.php' ) ) {
+  echo "Please copy and edit <strostrongg>config.php</strong> to setup Database connections<br />";
+  echo "cp config.php.example config.php && vim config.php";
+  exit;
+}
+$libs = array( 'pdo_mysql', 'pdo_sqlite' );
+foreach( $libs as $lib ) {
+  if( extension_loaded( $lib ) ) {
+    echo "Failed to load " . $libi . "</br>";
+    echo "Please install missing (Example on an Ubuntu 16.04): <br />";
+    echo "apt install " . $lib;
+    exit;
+  }
+}
+
+// load the database class
+require_once( __DIR__ . '/class/Database.php' );
 
 echo "<pre>";
 echo " ################################## <br />";
