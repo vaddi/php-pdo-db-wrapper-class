@@ -80,8 +80,9 @@ echo "</pre>";
 
 // check SQLite Database file
 if( $type === 'SQLite' && SQLITE_TYPE === 'FILE' && ! is_writeable( SQLITE_FILE ) ) {
+  $serverusername = posix_getpwuid(posix_geteuid());
 	echo "SQLite file not writeable by webserver user, please add write permissions to file and Folder! <br />";
-	echo "sudo chown -R www-data " .  dirname( SQLITE_FILE ). "<br />";
+  echo "sudo chown -R " . $serverusername['name'] . " " . dirname( SQLITE_FILE ). "<br />";
 	exit;
 }
 
@@ -308,7 +309,9 @@ echo "<pre>";
 $Database->close();
 echo "Connected: " . boolify( $Database->connected ) . "<br />";
 print_r( 'Connection: ' . (int) $Database->connection() . "<br />" );
-echo "</pre>";
+echo "</pre><br /><br />";
+
+echo "Find this Sourcecode on <a href='https://github.com/vaddi/php-pdo-db-wrapper-class'>github.com</a>";
 
 ?>
 
