@@ -12,7 +12,7 @@
 $type = 'SQLite';
 $table = 'users';
 
-// check for missing libraries
+// check for missing php libraries
 if( ! is_file( __DIR__ . '/config.php' ) ) {
   echo "Please copy and edit <strostrongg>config.php</strong> to setup Database connections<br />";
   echo "cp config.php.example config.php && vim config.php";
@@ -79,7 +79,7 @@ print_r( 'Connection: ' . $Database->connection() . "<br />" );
 echo "</pre>";
 
 // check SQLite Database file
-if( $type === 'SQLite' && ! is_writeable( SQLITE_FILE ) ) {
+if( $type === 'SQLite' && SQLITE_TYPE === 'FILE' && ! is_writeable( SQLITE_FILE ) ) {
 	echo "SQLite file not writeable by webserver user, please add write permissions to file and Folder! <br />";
 	echo "sudo chown -R www-data " .  dirname( SQLITE_FILE ). "<br />";
 	exit;
@@ -87,10 +87,14 @@ if( $type === 'SQLite' && ! is_writeable( SQLITE_FILE ) ) {
 
 // check Database connection
 if( ! $Database->connection() ) {
+	if ( SQLITE_TYPE === 'MEMORY' ) {
+		echo "SQLite type: <strong>" . SQLITE_TYPE . "</strong> is not full implemented. <br />See <a href='https://www.sqlite.org/inmemorydb.html'>https://www.sqlite.org/inmemorydb.html</a> for example. <br /><br />";
+	}
 	echo "No Database connection available, abort script. <br />";
 	exit;
 }
 
+echo "<hr />";
 
 // Drop
 echo "<pre>";
@@ -99,8 +103,8 @@ $query = "DROP TABLE IF EXISTS $table";
 $Database->query( $query );
 $result = $Database->execute();
 print_r( boolify( $result ) );
-echo "<br />";
-echo "</pre>";
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong><br />" );
+echo "</pre><hr />";
 
 // Create
 echo "<pre>";
@@ -114,8 +118,8 @@ if( $type === 'SQLite' ) {
 $Database->query( $query );
 $result = $Database->execute();
 print_r( boolify( $result ) );
-echo "<br />";
-echo "</pre>";
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong><br />" );
+echo "</pre><hr />";
 
 // Insert Single
 echo "<pre>";
@@ -125,11 +129,12 @@ $query = "INSERT INTO $table ( name ) VALUES ( 'Maik' )";
 $Database->query( $query );
 $result = (int) $Database->execute();
 print_r( boolify( $result ) );
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong>" );
 echo "<br />";
 echo "LastInsertId: ";
 print_r( $Database->lastInsertId( $table ) );
 echo "<br />";
-echo "</pre>";
+echo "</pre><hr />";
 
 // Insert Multiple
 echo "<pre>";
@@ -144,9 +149,10 @@ $Database->execute();
 $Database->bind( ':name', "Gabi" );
 $result = (int) $Database->execute();
 print_r( boolify( $result ) );
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong>" );
 echo "<br />";
 print_r( 'LastInsertId: ' . $Database->lastInsertId( $table ) . "<br />" );
-echo "</pre>";
+echo "</pre><hr />";
 
 // simple select
 echo "<pre>";
@@ -156,11 +162,12 @@ $query = "SELECT * FROM $table";
 $Database->query( $query );
 $result = (int) $Database->execute();
 print_r( boolify( $result ) );
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong>" );
 print_r( '<br />--- <br />Query Result: <br />' );
 echo tablify( $Database->resultObj() );
 //print_r( $Database->resultset() );
 print_r( 'RowCount: ' . $Database->rowCount( $table ) . "<br />" );
-echo "</pre>";
+echo "</pre><hr />";
 
 // Delete
 echo "<pre>";
@@ -173,9 +180,10 @@ $Database->bind( 2, "Klaus" );
 $Database->bind( 3, "Gabi" );
 $result = (int) $Database->execute();
 print_r( boolify( $result ) );
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong>" );
 echo "<br />";
 print_r( 'RowCount: ' . $Database->rowCount( $table ) . "<br />" );
-echo "</pre>";
+echo "</pre><hr />";
 
 // simple select
 echo "<pre>";
@@ -185,11 +193,12 @@ $query = "SELECT * FROM $table";
 $Database->query( $query );
 $result = (int) $Database->execute();
 print_r( boolify( $result ) );
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong>" );
 print_r( '<br />--- <br />Query Result: <br />' );
 echo tablify( $Database->resultObj() );
 //print_r( $Database->resultset() );
 print_r( 'RowCount: ' . $Database->rowCount( $table ) . "<br />" );
-echo "</pre>";
+echo "</pre><hr />";
 
 // Update
 echo "<pre>";
@@ -201,8 +210,9 @@ $Database->bind( ':name', "Greta" );
 $Database->bind( ':id', $userid );
 $result = (int) $Database->execute();
 print_r( boolify( $result ) );
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong>" );
 echo "<br />User id $userid updated";
-echo "</pre>";
+echo "</pre><hr />";
 
 // simple select
 echo "<pre>";
@@ -212,11 +222,12 @@ $query = "SELECT * FROM $table";
 $Database->query( $query );
 $result = (int) $Database->execute();
 print_r( boolify( $result ) );
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong>" );
 print_r( '<br />--- <br />Query Result: <br />' );
 echo tablify( $Database->resultObj() );
 //print_r( $Database->resultset() );
 print_r( 'RowCount: ' . $Database->rowCount( $table ) . "<br />" );
-echo "</pre>";
+echo "</pre><hr />";
 
 // Insert Single
 echo "<pre>";
@@ -226,9 +237,10 @@ $query = "INSERT INTO $table ( name ) VALUES ( 'Tim' )";
 $Database->query( $query );
 $result = (int) $Database->execute();
 print_r( boolify( $result ) );
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong>" );
 echo "<br />";
 print_r( 'LastInsertId: ' . $Database->lastInsertId( $table ) . "<br />" );
-echo "</pre>";
+echo "</pre><hr />";
 
 // simple select
 echo "<pre>";
@@ -238,11 +250,12 @@ $query = "SELECT * FROM $table";
 $Database->query( $query );
 $result = (int) $Database->execute();
 print_r( boolify( $result ) );
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong>" );
 print_r( '<br />--- <br />Query Result: <br />' );
 echo tablify( $Database->resultObj() );
 //print_r( $Database->resultset() );
 print_r( 'RowCount: ' . $Database->rowCount( $table ) . "<br />" );
-echo "</pre>";
+echo "</pre><hr />";
 
 // TODO add examples for other class functions
 // $Database->single();
@@ -254,14 +267,16 @@ print_r( "Insert Single: " );
 $query = "INSERT INTO $table ( name ) VALUES ( 'Rainer' )";
 $Database->query( $query );
 $result = (int) $Database->execute();
-print_r( boolify( $result ) . "<br />" );
+print_r( boolify( $result ) );
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong>" );
+echo "<br />";
 print_r( 'LastInsertId: ' . $Database->lastInsertId( $table ) . "<br />" );
 if( $result ) {
 	print_r( "End Transaction: " . boolify( $Database->endTransaction() ) . "<br />" );
 } else {
 	print_r( "Cancel Transaction: " . boolify( $Database->cancelTransaction() ) . "<br />" );
 }
-echo "</pre>";
+echo "</pre><hr />";
 
 // simple select
 echo "<pre>";
@@ -271,11 +286,12 @@ $query = "SELECT * FROM $table";
 $Database->query( $query );
 $result = (int) $Database->execute();
 print_r( boolify( $result ) );
+if( $result ) print_r( "<br />Query: <strong>" . $query . "</strong>" );
 print_r( '<br />--- <br />Query Result: <br />' );
 echo tablify( $Database->resultObj() );
 //print_r( $Database->resultset() );
 print_r( 'RowCount: ' . $Database->rowCount( $table ) . "<br />" );
-echo "</pre>";
+echo "</pre><hr />";
 
 // Debugging
 echo "<pre>";
